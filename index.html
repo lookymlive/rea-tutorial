@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial REA: de la instalación a un SaaS</title>
+<meta name="description" content="Guía paso a paso para usar REA (Reverse Engineer Anything) en un proyecto personal o en un SaaS, con ejemplo de editor y publicador de videos.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tutorial REA: de la instalación a un SaaS">
+<meta property="og:description" content="Guía paso a paso para usar REA (Reverse Engineer Anything) en un proyecto personal o un SaaS.">
+<meta property="og:url" content="https://lookymlive.github.io/rea-tutorial/">
+<meta property="og:image" content="https://lookymlive.github.io/rea-tutorial/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#eef2f4;--panel:#fff;--ink:#14212b;--mute:#4f6272;--line:#b9c8d3;--blue:#1f4e79;--acc:#c2410c;--code:#122a3f;--codefg:#e6f1f8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e2238;--panel:#12304d;--ink:#e6f1f8;--mute:#9db6c9;--line:#2d5174;--blue:#8cc4ee;--acc:#fb923c;--code:#0a1a2b;--codefg:#e6f1f8}}
+:root[data-theme="dark"]{--bg:#0e2238;--panel:#12304d;--ink:#e6f1f8;--mute:#9db6c9;--line:#2d5174;--blue:#8cc4ee;--acc:#fb923c;--code:#0a1a2b;--codefg:#e6f1f8}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 "IBM Plex Sans",system-ui,sans-serif;display:grid;grid-template-columns:260px minmax(0,1fr)}
+nav{position:sticky;top:0;height:100vh;overflow:auto;padding:1.5rem 1.25rem;border-right:1px solid var(--line);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px;background-color:var(--bg)}
+nav b{display:block;font-size:1.25rem;margin-bottom:.25rem}
+nav small{display:block;color:var(--mute);margin-bottom:1.25rem}
+nav a{display:block;padding:.3rem .5rem;color:var(--ink);text-decoration:none;border-left:3px solid transparent;background:var(--bg)}
+nav a:hover,nav a:focus-visible{border-left-color:var(--acc);outline:none}
+nav button{margin-top:1rem}
+main{padding:2.5rem clamp(1rem,5vw,4rem) 5rem;max-width:62rem}
+h1{font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.08;margin:0 0 1rem;letter-spacing:-.02em;font-weight:600}
+h2{font-size:1.65rem;margin:3.5rem 0 .75rem;padding-top:1.25rem;border-top:2px solid var(--blue);font-weight:600}
+h3{font-size:1.15rem;margin:1.75rem 0 .5rem}
+p,li{max-width:70ch}
+a{color:var(--blue)}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9em;background:var(--panel);border:1px solid var(--line);padding:.05em .35em;border-radius:3px}
+.lead{font-size:1.25rem;color:var(--mute);max-width:60ch}
+.cmd{position:relative;margin:1rem 0}
+pre{margin:0;background:var(--code);color:var(--codefg);padding:1rem 1rem;overflow-x:auto;border-radius:4px;font:400 .9rem/1.55 "IBM Plex Mono",ui-monospace,monospace}
+pre code{background:none;border:0;padding:0;font-size:inherit}
+.cmd button{position:absolute;top:.5rem;right:.5rem}
+button{font:500 .85rem "IBM Plex Sans",sans-serif;background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:.3rem .7rem;border-radius:3px;cursor:pointer}
+button:hover{border-color:var(--acc)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.step{display:grid;grid-template-columns:2.6rem 1fr;gap:0 1rem;margin:1.75rem 0}
+.step>i{font:500 1.1rem "IBM Plex Mono",monospace;font-style:normal;width:2.6rem;height:2.6rem;display:grid;place-items:center;border:2px solid var(--blue);border-radius:50%;color:var(--blue);background:var(--panel)}
+.step h3{margin:.35rem 0 .4rem}
+.note{border-left:4px solid var(--acc);background:var(--panel);padding:.9rem 1.1rem;margin:1.5rem 0;max-width:70ch}
+.note.ok{border-left-color:var(--blue)}
+.note p{margin:.3rem 0}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:1rem 0;font-size:.97rem}
+th,td{border:1px solid var(--line);padding:.55rem .75rem;text-align:left;vertical-align:top}
+.scroll{overflow-x:auto}
+details{background:var(--panel);border:1px solid var(--line);padding:.6rem 1rem;margin:.6rem 0;max-width:70ch}
+summary{cursor:pointer;font-weight:500}
+footer{margin-top:4rem;color:var(--mute);font-size:.92rem;border-top:1px solid var(--line);padding-top:1rem}
+@media (max-width:860px){body{display:block}nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}.step{grid-template-columns:2.2rem 1fr}.step>i{width:2.2rem;height:2.2rem}}
+</style>
+</head>
+<body>
+<nav aria-label="Índice">
+  <b>REA, paso a paso</b>
+  <small>Tutorial no oficial</small>
+  <a href="#que-es">Qué es REA</a>
+  <a href="#reglas">Uso responsable</a>
+  <a href="#instalar">Instalación</a>
+  <a href="#primer-analisis">Primer análisis</a>
+  <a href="#personal">Proyecto personal</a>
+  <a href="#saas">Flujo para un SaaS</a>
+  <a href="#ejemplo">Ejemplo: editor de videos</a>
+  <a href="#problemas">Problemas comunes</a>
+  <a href="#checklist">Checklist</a>
+  <button id="theme" type="button">Cambiar tema</button>
+</nav>
+
+<main>
+<h1>Usar REA para entender cómo funciona un software y construir el tuyo</h1>
+<p class="lead">REA conecta a tu agente de IA con herramientas de ingeniería inversa. Esta guía va de la instalación a un flujo de trabajo completo, para un proyecto personal o para un SaaS.</p>
+
+<h2 id="que-es">Qué es REA</h2>
+<p><a href="https://github.com/morluto/rea">REA</a> (Reverse Engineer Anything) es un servidor MCP y una CLI. Tu agente lo usa para inspeccionar binarios nativos, apps JavaScript y Electron, ensamblados .NET, APKs y sitios web. REA devuelve hallazgos junto con la evidencia y las limitaciones de cada conclusión. El análisis corre en tu máquina; tu agente recibe los resultados, y el proveedor del modelo tiene su propia política de datos.</p>
+<div class="scroll"><table>
+<tr><th>Si querés analizar…</th><th>Necesitás</th></tr>
+<tr><td>Binarios nativos</td><td>Hopper, Ghidra o IDA (ya instalados)</td></tr>
+<tr><td>JavaScript / Electron</td><td>Node.js y npm; en Linux, un <code>ps</code> compatible con procps</td></tr>
+<tr><td>.NET</td><td>Nada extra (análisis estático)</td></tr>
+<tr><td>Sitios web</td><td>Un navegador basado en Chrome</td></tr>
+<tr><td>APKs Android</td><td>JADX headless y un JDK completo</td></tr>
+</table></div>
+<p>Requisito base: Node.js 22.x (≥22.19), 24.x (≥24.11) o 26+, más npm. La lista completa de objetivos está en el README del repositorio.</p>
+
+<h2 id="reglas">Uso responsable</h2>
+<div class="note">
+<p><strong>REA es para investigación lícita, educación, interoperabilidad, preservación de software y análisis de software propio o que estés autorizado a examinar.</strong> El proyecto lo deja escrito en su <a href="https://github.com/morluto/rea/blob/main/DISCLAIMER.md">DISCLAIMER</a>.</p>
+<p>Antes de cada análisis preguntate: ¿es mío, es open source, o tengo permiso y licencia para examinarlo? Si la respuesta es no, no sigas. Las herramientas comerciales (IDA, Hopper, JEB) requieren licencia legítima.</p>
+</div>
+
+<h2 id="instalar">Instalación</h2>
+
+<div class="step"><i>1</i><div>
+<h3>Verificá Node.js</h3>
+<div class="cmd"><pre><code>node --version
+npm --version</code></pre></div>
+<p>Tiene que ser 22.19+, 24.11+ o 26+.</p>
+</div></div>
+
+<div class="step"><i>2</i><div>
+<h3>Registrá REA en tu agente</h3>
+<div class="cmd"><pre><code>npx rea-agents setup</code></pre></div>
+<p>Elegí tus agentes, revisá los cambios propuestos y aprobalos. El setup agrega el servidor MCP de REA y las instrucciones de trabajo, y guarda backups de tu configuración. Funciona con Claude Code, Codex, Cursor, Gemini CLI, Grok Build y otros.</p>
+</div></div>
+
+<div class="step"><i>3</i><div>
+<h3>Reiniciá el agente</h3>
+<p>Sin reiniciar, el agente no ve las herramientas nuevas.</p>
+</div></div>
+
+<div class="step"><i>4</i><div>
+<h3>Instalá la CLI (opcional, recomendado)</h3>
+<div class="cmd"><pre><code>npm install --global rea-agents
+rea --help</code></pre></div>
+<p>La CLI te deja correr los mismos análisis desde la terminal y usarlos en scripts.</p>
+</div></div>
+
+<div class="step"><i>5</i><div>
+<h3>Mantenelo actualizado</h3>
+<p>REA cambia rápido y cada versión trae correcciones.</p>
+<div class="cmd"><pre><code># CLI instalada globalmente
+rea update
+
+# Si usás npx: refrescá el registro del agente
+npx rea-agents@latest setup</code></pre></div>
+</div></div>
+
+<div class="note ok"><p>Descargá REA solo de <a href="https://github.com/morluto/rea">github.com/morluto/rea</a>, <a href="https://rea.tools">rea.tools</a> o el paquete <a href="https://www.npmjs.com/package/rea-agents">rea-agents</a> en npm. Un repo con nombre parecido no es oficial.</p></div>
+
+<h2 id="primer-analisis">Primer análisis</h2>
+
+<h3>Desde la terminal</h3>
+<p>Con una app JavaScript/Electron ya extraída (carpeta o ASAR), usá una ruta absoluta:</p>
+<div class="cmd"><pre><code>npx -y rea-agents@latest analyze-javascript-application /ruta/absoluta/a/la/app --json</code></pre></div>
+<p>El resultado lista módulos, imports y límites de Electron, cada uno con su evidencia.</p>
+
+<h3>Desde tu agente</h3>
+<p>Pedile algo concreto, con la pregunta, el objetivo y el entregable:</p>
+<div class="cmd"><pre><code>Usá REA para entender cómo [funcionalidad] funciona en [mi app / app autorizada].
+Mostrame la evidencia de cada conclusión y marcá lo que no pudiste confirmar.
+Después proponé un diseño para implementarlo en mi proyecto.</code></pre></div>
+
+<h2 id="personal">Proyecto personal</h2>
+<p>Para un proyecto propio alcanza con un ciclo corto: preguntar, verificar, construir.</p>
+
+<div class="step"><i>1</i><div><h3>Elegí una sola pregunta</h3><p>"¿Cómo guarda el estado esta app?" rinde más que "explicame todo".</p></div></div>
+<div class="step"><i>2</i><div><h3>Pedí evidencia</h3><p>Exigí rutas de archivo, módulos y referencias. Si el agente afirma algo sin evidencia, pedile que lo respalde o que lo marque como hipótesis.</p></div></div>
+<div class="step"><i>3</i><div><h3>Implementá con tests</h3><p>Pedile al agente que escriba la versión propia y los tests que comparan su comportamiento con lo observado. Escribí tu código, no copies el del objetivo.</p></div></div>
+<div class="step"><i>4</i><div><h3>Anotá lo aprendido</h3><p>Guardá en el repo un <code>docs/hallazgos.md</code> con pregunta, evidencia y decisión. Te ahorra repetir el análisis.</p></div></div>
+
+<h2 id="saas">Flujo para un SaaS</h2>
+<p>En un producto con clientes, sumá método y trazabilidad.</p>
+
+<div class="step"><i>1</i><div><h3>Definí alcance y autorización</h3><p>Anotá qué analizás, por qué y con qué permiso (licencia, open source, acuerdo de interoperabilidad). Esto protege a tu empresa.</p></div></div>
+<div class="step"><i>2</i><div><h3>Separá investigación de implementación</h3><p>Una persona o sesión investiga y produce una especificación escrita; otra implementa desde esa especificación. El código final nace de tu spec, no del objetivo.</p></div></div>
+<div class="step"><i>3</i><div><h3>Guardá la evidencia</h3><p>Usá <code>--json</code> en la CLI y versioná los resultados importantes. Así cualquier decisión técnica se puede auditar.</p></div></div>
+<div class="step"><i>4</i><div><h3>Verificá contra la fuente oficial</h3><p>Si el objetivo es un servicio con API pública, la API documentada manda. REA te ayuda a entender, no reemplaza el contrato oficial.</p></div></div>
+<div class="step"><i>5</i><div><h3>Automatizá en CI</h3><p>Corré la CLI de REA en un job para detectar cambios entre versiones de un componente que dependa de terceros autorizados.</p></div></div>
+
+<h2 id="ejemplo">Ejemplo: SaaS que edita y publica videos</h2>
+<p>Supuesto de este ejemplo: querés una herramienta que <strong>edite videos tuyos o de tus clientes</strong> y los <strong>publique en YouTube, Instagram y TikTok</strong>. Trabajá solo con contenido sobre el que tenés derechos. Publicar se hace con las APIs oficiales; no hace falta (ni corresponde) hacer ingeniería inversa de esas plataformas.</p>
+
+<h3>Arquitectura</h3>
+<div class="scroll"><table>
+<tr><th>Capa</th><th>Qué hace</th><th>Herramienta</th></tr>
+<tr><td>Subida</td><td>Recibe el video del usuario</td><td>Tu backend + almacenamiento de objetos</td></tr>
+<tr><td>Edición</td><td>Recorta, cambia formato, agrega subtítulos</td><td>FFmpeg en una cola de trabajos</td></tr>
+<tr><td>Publicación</td><td>Sube a cada red con la cuenta del usuario</td><td>YouTube Data API, Instagram Graph API, TikTok Content Posting API</td></tr>
+<tr><td>Cuentas</td><td>El usuario autoriza tu app</td><td>OAuth 2.0 en cada plataforma</td></tr>
+</table></div>
+
+<h3>Paso a paso</h3>
+
+<div class="step"><i>1</i><div>
+<h3>Editá con FFmpeg</h3>
+<div class="cmd"><pre><code># Recortar entre dos tiempos sin recomprimir
+ffmpeg -i entrada.mp4 -ss 00:00:05 -to 00:00:35 -c copy recorte.mp4
+
+# Pasar a vertical 9:16 (Reels, Shorts, TikTok)
+ffmpeg -i recorte.mp4 \
+  -vf "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920" \
+  -c:a copy vertical.mp4</code></pre></div>
+</div></div>
+
+<div class="step"><i>2</i><div>
+<h3>Registrá tu app en cada plataforma</h3>
+<p>Creá la app en Google Cloud (YouTube), Meta for Developers (Instagram) y TikTok for Developers. Cada una te da credenciales OAuth. Revisá en su documentación los permisos, el proceso de revisión de la app y las cuotas, porque cambian con el tiempo.</p>
+</div></div>
+
+<div class="step"><i>3</i><div>
+<h3>Implementá la publicación</h3>
+<p>YouTube sube con el método <code>videos.insert</code>. Instagram publica en dos pasos: crear un contenedor de media y después publicarlo. TikTok usa su Content Posting API. Cada plataforma impone límites de duración, tamaño y formato, así que validá el archivo antes de enviarlo.</p>
+</div></div>
+
+<div class="step"><i>4</i><div>
+<h3>Dónde entra REA</h3>
+<p>Usalo en lo que sí es tuyo o está autorizado:</p>
+<ul>
+<li>Entender una app de escritorio de edición open source o con licencia que permita interoperar, por ejemplo cómo guarda sus proyectos, para que tu SaaS importe esos archivos.</li>
+<li>Analizar tu propio prototipo o una versión anterior de tu producto cuando perdiste el código.</li>
+<li>Inspeccionar el comportamiento de tu propio sitio para documentar rutas y llamadas.</li>
+</ul>
+<div class="cmd"><pre><code>Usá REA para analizar la app de edición en /ruta/a/app (open source / autorizada).
+Quiero saber cómo serializa un proyecto: formato, campos y versiones.
+Mostrame evidencia y escribí una especificación del formato que mi SaaS pueda importar.</code></pre></div>
+</div></div>
+
+<div class="note">
+<p><strong>Lo que esta guía no hace.</strong> No sirve para descargar o copiar videos ajenos, ni para sortear los controles, términos o APIs de YouTube, Instagram o TikTok. Reeditar y resubir videos de terceros sin permiso suele violar derechos de autor y los términos de cada plataforma, y puede costarte la cuenta.</p>
+</div>
+
+<h2 id="problemas">Problemas comunes</h2>
+<details><summary>El agente no ve las herramientas de REA</summary><p>Reiniciá el agente después del setup. Si sigue igual, corré <code>npx rea-agents@latest setup</code> y revisá que el cambio se haya aplicado.</p></details>
+<details><summary>Falla en Linux con análisis de JavaScript, Ghidra o JADX</summary><p>REA necesita un <code>ps</code> compatible con procps en el <code>PATH</code>. Instalá el paquete <code>procps</code> de tu distribución.</p></details>
+<details><summary>Hopper muestra un diálogo la primera vez (macOS)</summary><p>Elegí modo demo o activá tu licencia en esa ventana, en la misma sesión de usuario, antes de lanzar tu primera operación.</p></details>
+<details><summary>Binarios muy grandes se cortan por tiempo</summary><p>Subí el plazo con las variables <code>REA_GHIDRA_STARTUP_TIMEOUT_MS</code> o <code>REA_HOPPER_STARTUP_TIMEOUT_MS</code>.</p></details>
+<details><summary>Encontré un bug</summary><p>Actualizá primero. Si persiste, abrí un issue en el repo con versión de REA, tipo de objetivo, pasos para reproducir y el error.</p></details>
+
+<h2 id="checklist">Checklist</h2>
+<ul>
+<li>Tengo autorización o licencia sobre lo que analizo.</li>
+<li>Hice una pregunta concreta y pedí evidencia.</li>
+<li>Escribí una especificación y mi propio código.</li>
+<li>Guardé los resultados en <code>--json</code> y documenté la decisión.</li>
+<li>Para publicar en redes usé las APIs oficiales y contenido con derechos.</li>
+<li>Mantengo REA actualizado con <code>rea update</code>.</li>
+</ul>
+
+<footer>
+Guía no oficial. Fuente de verdad: <a href="https://github.com/morluto/rea">repositorio de REA</a>, <a href="https://rea.tools/guides/">guías</a> y documentación oficial. Verificá siempre las versiones y requisitos vigentes.
+</footer>
+</main>
+
+<script>
+document.querySelectorAll('.cmd').forEach(function(box){
+  var b=document.createElement('button');
+  b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',function(){
+    var t=box.querySelector('code').innerText;
+    try{
+      navigator.clipboard.writeText(t).then(function(){b.textContent='Copiado';setTimeout(function(){b.textContent='Copiar'},1500)});
+    }catch(e){b.textContent='Copiá a mano'}
+  });
+  box.appendChild(b);
+});
+var root=document.documentElement;
+document.getElementById('theme').addEventListener('click',function(){
+  var dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  root.dataset.theme=dark?'light':'dark';
+});
+</script>
+</body>
+</html>
